@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/0trebeh/Ionic-Angular/issues"
   },
-  "homepage": "https://github.com/0trebeh/Ionic-Angular#readme"
+  "homepage": "https://github.com/0trebeh/Ionic-Angular#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "mongoose": "^5.11.14"
+  }
 }

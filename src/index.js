@@ -1,25 +1,21 @@
-import express from "express";
-import exphbs from "express-handlebars";
-import path from "path";
+const express = require("express");
+const morgan = require("morgan");
 
 //initializations
 const app = express();
 
 //Settings
 app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
-app.set('.hbs', exphbs({
-    extname: '.hbs',
-    
-}));
+
 
 //Middlewares
-app.use(express.json());
+app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 
 //Routers
-
-//Static Files
+app.use(require('./routes'));
+app.use('/api/users', require('./routes/users'));
 
 //Starting the Server 
 app.listen(app.get('port'), () => {

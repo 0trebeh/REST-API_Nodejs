@@ -4,21 +4,25 @@
   "description": "Servidor de la app ionic/angular",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0trebeh/Ionic-Angular.git"
+    "url": "git+https://github.com/0trebeh/REST-API_Nodejs.git"
   },
   "author": "Heberto and Clemente",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/0trebeh/Ionic-Angular/issues"
+    "url": "https://github.com/0trebeh/REST-API_Nodejs/issues"
   },
-  "homepage": "https://github.com/0trebeh/Ionic-Angular#readme",
+  "homepage": "https://github.com/0trebeh/REST-API_Nodejs#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "express-handlebars": "^5.2.0",
-    "mongoose": "^5.11.14"
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.1",
+    "underscore": "^1.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

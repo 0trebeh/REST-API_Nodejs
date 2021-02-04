@@ -23,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 //rutas
-require("./src/routes/users.routes")(app);
+require("./routes/users.routes")(app);
 //app.use('/api/users', require('./src/routes/users.routes'));
 
+module.exports = app;

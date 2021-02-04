@@ -1,28 +1,32 @@
 {
-  "name": "servidor",
+  "name": "nodejs-api",
   "version": "1.0.0",
-  "description": "Servidor de la app ionic/angular",
-  "main": "index.js",
+  "description": "Api Rest CRUD con Node.js, Express y MongoDB",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon src"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/0trebeh/REST-API_Nodejs.git"
   },
-  "author": "Heberto and Clemente",
+  "author": "Heberto y Clemente",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/0trebeh/REST-API_Nodejs/issues"
   },
   "homepage": "https://github.com/0trebeh/REST-API_Nodejs#readme",
+  "keywords": [
+    "nodejs",
+    "express",
+    "rest",
+    "api",
+    "mongodb"
+  ],
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
-    "underscore": "^1.12.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
+    "mongoose": "^5.11.15"
   }
 }

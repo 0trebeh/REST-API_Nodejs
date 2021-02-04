@@ -1,2 +1,11 @@
-# Server con nodejs
-para conectar a app ionic/angular por peticiones http y a un servidor de mongodb.
+# Node.js Express y MongoDB: CRUD Rest API para conectar App movil
+
+## Project setup
+```
+npm install
+```
+
+### Run
+```
+node server.js
+```

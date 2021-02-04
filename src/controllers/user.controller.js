@@ -4,6 +4,7 @@ const User = db.users;
 // Crear y guardar un nuevo usuario
 exports.create = (req, res) => {
   // Validar solicitud (aqui por ahora solo el nombre)
+  console.log(req.body);
   if (!req.body.name) {
     res.status(400).send({ message: "El nombre no puede estar vacío!" });
     return;
@@ -30,7 +31,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const username = req.query.username;
   var condition = username ? { username: { $regex: new RegExp(username), $options: "i" } } : {};
-
+  
   User.find(condition)
     .then(data => { res.send(data) })
     .catch(err => { res.status(500).send({
@@ -93,8 +94,7 @@ exports.delete = (req, res) => {
           message: "El Usuario se eliminó correctamentes!"
         });
       }
-    })
-    .catch(err => {
+    }).catch(err => {
       res.status(500).send({ message: "No se pudo eliminar el usuario con id: " + id });
     });
 };

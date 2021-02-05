@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // ruta principal
+//https://api-rest-s.herokuapp.com
 app.get("/", (req, res) => {
   res.json({ message: "Hola mundo."});
 });

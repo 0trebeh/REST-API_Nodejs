@@ -3,28 +3,28 @@ const User = db.users;
 
 //Login
 exports.login = (req, res) => {
+  console.log(req.body)
   User.findOne({username: req.body.username, password: req.body.password})
     .then(data => {
-      if (!data)
+      if (!data){
+        console.log("Usuario no encontrado" );
         res.status(404).send({ message: "Usuario no encontrado" });
-      else res.send(data);
+      }
+      else{
+        res.send(data);
+        console.log("Encontrado!" );
+      } 
     })
     .catch(err => {
       res.status(500).send({ message: "Error al recuperar el usuario"});
+      console.log("Usuario no encontrado" );
     });
 }
 
 // Crear y guardar un nuevo usuario
 exports.create = (req, res) => {
-  // Validar solicitud (aqui por ahora solo el nombre)
-  if (!req.body.name) {
-    res.status(400).send({ message: "El nombre no puede estar vacío!" });
-    return;
-  }
-
   // Crear un nuevo usuario
   const user = new User({
-    name: req.body.name,
     username: req.body.username,
     email: req.body.email,
     password: req.body.password

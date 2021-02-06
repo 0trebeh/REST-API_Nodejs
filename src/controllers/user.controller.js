@@ -1,10 +1,22 @@
 const db = require("../models");
 const User = db.users;
 
+//Login
+exports.login = (req, res) => {
+  User.findOne({username: req.body.username, password: req.body.password})
+    .then(data => {
+      if (!data)
+        res.status(404).send({ message: "Usuario no encontrado" });
+      else res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({ message: "Error al recuperar el usuario"});
+    });
+}
+
 // Crear y guardar un nuevo usuario
 exports.create = (req, res) => {
   // Validar solicitud (aqui por ahora solo el nombre)
-  console.log(req.body);
   if (!req.body.name) {
     res.status(400).send({ message: "El nombre no puede estar vacío!" });
     return;

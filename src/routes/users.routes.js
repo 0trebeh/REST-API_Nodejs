@@ -3,6 +3,9 @@ module.exports = app => {
   
     var router = require("express").Router();
   
+    //Prueba de integracion
+    router.post("/login", users.login);
+
     // Crear un nuevo usuario
     router.post("/", users.create);
   

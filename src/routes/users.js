@@ -4,6 +4,7 @@ const router = Router();
 const { 
     getUsers, 
     getUserById, 
+    getLogin,
     createUser, 
     updateUser, 
     deleteUser 
@@ -11,6 +12,7 @@ const {
 
 router.get('/users', getUsers);
 router.get('/users/:id', getUserById);
+router.post('/users/login', getLogin);
 router.post('/users', createUser);
 router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);

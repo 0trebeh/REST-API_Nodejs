@@ -11,6 +11,15 @@ const getUserById = async (req, res) => {
   res.json(response.rows);
 };
 
+const getLogin = async (req, res) => {
+  const { username, password } = req.body;
+  const response = await client.query('SELECT * FROM users WHERE username = $1 AND password = $2', [
+    username, 
+    password
+  ]);
+  res.json(response.rows);
+};
+
 const createUser = async (req, res) => {
   const { username, email, password } = req.body;
   const response = await client.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3)', [
@@ -48,6 +57,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getUsers,
   getUserById,
+  getLogin,
   createUser,
   updateUser,
   deleteUser

@@ -9,7 +9,6 @@ const getUserById = async (req, res) => {
   const id = parseInt(req.params.id);
   const response = await client.query('SELECT * FROM users WHERE user_id = $1', [id]);
   res.json(response.rows);
-  client.end();
 };
 
 const createUser = async (req, res) => {
@@ -25,7 +24,6 @@ const createUser = async (req, res) => {
           user: {username, email, password}
       }
   })
-  client.end();
 };
 
 const updateUser = async (req, res) => {
@@ -39,14 +37,12 @@ const updateUser = async (req, res) => {
       id
   ]);
   res.json('User Updated Successfully');
-  client.end();
 };
 
 const deleteUser = async (req, res) => {
   const id = parseInt(req.params.id);
   await client.query('DELETE FROM users where user_id = $1', [ id ]);
   res.json(`User ${id} deleted Successfully`);
-  client.end();
 };
 
 module.exports = {

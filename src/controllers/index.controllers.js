@@ -9,6 +9,7 @@ const getUserById = async (req, res) => {
   const id = parseInt(req.params.id);
   const response = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
   res.json(response.rows);
+  pool.end();
 };
 
 const createUser = async (req, res) => {
@@ -24,6 +25,7 @@ const createUser = async (req, res) => {
           user: {username, email, password}
       }
   })
+  pool.end();
 };
 
 const updateUser = async (req, res) => {
@@ -37,12 +39,14 @@ const updateUser = async (req, res) => {
       id
   ]);
   res.json('User Updated Successfully');
+  pool.end();
 };
 
 const deleteUser = async (req, res) => {
   const id = parseInt(req.params.id);
   await pool.query('DELETE FROM users where user_id = $1', [ id ]);
   res.json(`User ${id} deleted Successfully`);
+  pool.end();
 };
 
 module.exports = {

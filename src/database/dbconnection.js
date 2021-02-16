@@ -1,14 +1,9 @@
-const { Pool } = require('pg');
 const config = require("../config/config"); 
 
-const pool = new Pool( config.DATABASE );
-
-module.exports = pool;
-/*
 const { Client } = require('pg');
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: config.DBURI,
   ssl: {
     rejectUnauthorized: false
   }
@@ -16,4 +11,4 @@ const client = new Client({
 
 client.connect();
 
-module.exports = client;*/
+module.exports = client;

@@ -1,8 +1,6 @@
-const app = require('./server');
-require('./database'); 
+const server = require('./server');
 const config = require("./config/config"); 
 
-// iniciar el servidor
-app.listen(config.PORT, () => {
-    console.log('El servidor esta corriendo en el puerto: ' + config.PORT);
+server.listen(config.PORT, () => {
+    console.log('Server in port: ' + config.PORT);
 });

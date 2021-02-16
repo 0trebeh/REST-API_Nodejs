@@ -4,23 +4,16 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 //inicializaciones
-const app = express();
+require('./database/dbconnection'); 
+const server = express();
 
 //Middlewares
-app.use(cors());
-app.use(helmet());
-// Analizar la solicitud
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
-// ruta principal
-//https://api-rest-s.herokuapp.com
-app.get("/", (req, res) => {
-  res.json({ message: "Hola mundo :)"});
-});
+server.use(cors());
+server.use(helmet());
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
 
 //rutas
-require("./routes/users.routes")(app);
+server.use('/api', require('./routes/users'));
 
-module.exports = app;
+module.exports = server;

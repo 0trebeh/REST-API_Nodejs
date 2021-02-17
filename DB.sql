@@ -15,9 +15,10 @@ insert into short_answer (value, text_id) values ('cacahuate rock', 1);
 create table users (
 	user_id serial PRIMARY KEY,
 	username VARCHAR (50) UNIQUE NOT NULL,
-	avatar VARCHAR (500),
+	avatar VARCHAR (600),
 	email VARCHAR (255) UNIQUE NOT NULL,
-	password VARCHAR (60) NOT NULL
+	password VARCHAR (60) NOT NULL,
+	token_validation VARCHAR (30)
 );
 
 create table menu (

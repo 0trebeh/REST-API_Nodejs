@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
   ]);
 
   //send email of welcome
-  await main(email)
+  await main(username, email)
   .catch(console.error);
 
   res.json({

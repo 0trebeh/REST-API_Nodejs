@@ -1,22 +1,23 @@
 const nodemailer = require("nodemailer");
+const config = require("../config/config"); 
 
-const main = async (email) => {
+const main = async (username, email) => {
 
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    host: config.hostMail,
+    port: config.portMail,
+    secure: config.secure,
     auth: {
-      user: 'your.forms.v01@gmail.com',
-      pass: 'qwcq hhgu dqar brgn'
+      user: config.user,
+      pass: config.pass
     },
   });
 
   // send mail with defined transport object
   await transporter.sendMail({
-    from: '"Your Forms" <your.forms.v01@gmail.com>', 
+    from: '"Your Forms" <'+ config.user +'>', 
     to: email, 
-    subject: " welcome to your forms! ✔",
+    subject: "Hello "+ username +"!. Welcome to your forms! ✔",
     text: "Congratulations your registration in your forms was successful! \nstart creating your forms without limits!"
   });
 }

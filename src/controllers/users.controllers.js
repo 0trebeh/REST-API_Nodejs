@@ -1,4 +1,5 @@
 const client = require('../database/dbconnection');
+const { main } = require('../session/mailer');
 
 const getUsers = async (req, res) => {
   const response = await client.query('SELECT * FROM users ORDER BY user_id ASC');
@@ -27,6 +28,11 @@ const createUser = async (req, res) => {
     email,
     password
   ]);
+
+  //send email of welcome
+  await main(email)
+  .catch(console.error);
+
   res.json({
       message: 'User Added successfully',
       body: {

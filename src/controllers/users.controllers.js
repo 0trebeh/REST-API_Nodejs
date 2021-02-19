@@ -1,5 +1,5 @@
-const client = require('../database/dbconnection');
-const { main } = require('../session/mailer');
+const client = require('../utils/dbconnection');
+const { main } = require('../utils/mailer');
 
 const getUsers = async (req, res) => {
   const response = await client.query('SELECT * FROM users ORDER BY user_id ASC');

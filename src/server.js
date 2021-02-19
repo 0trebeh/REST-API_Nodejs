@@ -4,7 +4,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 //inicializaciones
-require('./database/dbconnection'); 
 const server = express();
 
 //Middlewares

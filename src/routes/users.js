@@ -10,11 +10,11 @@ const {
     deleteUser 
 } = require('../controllers/users.controllers');
 
-router.get('/users', getUsers);
-router.get('/users/:id', getUserById);
-router.post('/users/login', getLogin);
-router.post('/users', createUser);
-router.put('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
+router.get('/', getUsers);
+router.get('/:id', getUserById);
+router.post('/login', getLogin);
+router.post('/', createUser);
+router.put('/:id', updateUser);
+router.delete('/:id', deleteUser);
 
 module.exports = router;

@@ -13,6 +13,7 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
 //rutas
-server.use('/api', require('./routes/users'));
+server.use('/api/users', require('./routes/users'));
+server.use('/api/forms', require('./routes/forms'));
 
 module.exports = server;

@@ -10,4 +10,7 @@ module.exports = {
   //emaiAsintent
   user: 'your.forms.v01@gmail.com',
   pass: 'qwcq hhgu dqar brgn',
+
+  //  QUERYS
+  
 }

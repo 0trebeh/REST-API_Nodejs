@@ -6,7 +6,6 @@ create table app_user (
 	avatar VARCHAR (600),
 	email VARCHAR (255) UNIQUE NOT NULL,
 	password VARCHAR (120) NOT NULL,
-	token_validation VARCHAR (60),
   admin boolean DEFAULT false
 );
 /*insert into app_user (username, avatar, email, password, token_validation, admin) values ('clemente', NULL, 'clemente@gmail.com', 'cacahuate', NULL, NULL);*/
@@ -29,16 +28,27 @@ create table menu (
 /*1*/select * from menu, form where menu.menu_id = form.menu_id;
 /*2*/select * from menu inner join form on menu.menu_id = form.menu_id;
 /*3*/select * from menu as m inner join form as f on m.menu_id = f.menu_id;
-/* 
+/* 1
 WITH RECURSIVE ctemenu AS (
-      SELECT menu_id, title, submenu
+      SELECT menu_id, title_menu, submenu
       FROM menu
       WHERE menu_id = 1
    UNION ALL
-      SELECT menu.menu_id, menu.title, menu.submenu
+      SELECT menu.menu_id, menu.title_menu, menu.submenu
       FROM menu
          JOIN ctemenu ON menu.submenu = ctemenu.menu_id
-) SELECT * FROM ctemenu join form on ctemenu.menu_id = form.menu_id LIMIT 30;
+) SELECT * FROM ctename LIMIT 30;
+*/
+/*
+WITH RECURSIVE ctemenu AS (
+        SELECT menu_id, title_menu, submenu
+        FROM menu
+        WHERE menu_id = 1
+    UNION ALL
+        SELECT menu.menu_id, menu.title_menu, menu.submenu
+        FROM menu
+          JOIN ctemenu ON menu.submenu = ctemenu.menu_id
+  ) SELECT ctemenu.menu_id, ctemenu.title_menu, ctemenu.submenu, form.form_id, form.menu_id, form.title_form, form.description_form, form.random_order, form.send_alert, form.locked FROM ctemenu FULL OUTER JOIN form on ctemenu.menu_id = form.menu_id;
 */
 
 SELECT E1.EmployeeID
@@ -78,8 +88,6 @@ create table type_question (
   selection boolean DEFAULT false,
   text boolean DEFAULT false,
   numeric boolean DEFAULT false,
-  date boolean DEFAULT false,
-  time boolean DEFAULT false,
   checklist boolean DEFAULT false,
   drop_down_list boolean DEFAULT false
 );

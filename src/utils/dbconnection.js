@@ -1,14 +1,14 @@
 const config = require("../config/config"); 
 
-const { Client } = require('pg');
 
-const client = new Client({
+const { Pool } = require('pg');
+
+const pool = new Pool({
   connectionString: config.DBURI,
+  max: 20,
   ssl: {
     rejectUnauthorized: false
   }
-});
+})
 
-client.connect();
-
-module.exports = client;
+module.exports = pool;

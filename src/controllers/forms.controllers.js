@@ -4,7 +4,7 @@ const { main } = require('../utils/mailer');
 const getMenus = async (req, res) => {
   const client = await pool.connect();
   try {
-    const response = await client.query('SELECT * FROM menu WHERE submenu IS NULL');
+    const response = await client.query('SELECT menu_id, title_menu FROM menu WHERE submenu IS NULL');
     res.status(200).json(response.rows);
   } finally {
     client.release(true);
@@ -67,14 +67,12 @@ const createMenu = async (req, res) => {
 
 const createForm = async (req, res) => {
   const client = await pool.connect();
-  const { menu_id, title_form, description_form, random_order, send_alert, locked } = req.body;
+  const { menu_id, title_form, description_form, locked } = req.body;
   try {
-    const response = await client.query('INSERT INTO form (menu_id, title_form, description_form, random_order, send_alert, locked) VALUES ($1, $2, $3, %4, %5, %6) RETURNING *', [
+    const response = await client.query('INSERT INTO form (menu_id, title_form, description_form, locked) VALUES ($1, $2, $3, %4) RETURNING *', [
       menu_id, 
       title_form, 
       description_form, 
-      random_order, 
-      send_alert, 
       locked
     ]);
     res.status(200).json(response.rows);
@@ -149,13 +147,11 @@ const updateMenu = async (req, res) => {
 const updateForm = async (req, res) => {
   const client = await pool.connect();
   const form_id = parseInt(req.params.id);
-  const { title_form, description_form, random_order, send_alert, locked } = req.body;
+  const { title_form, description_form, locked } = req.body;
   try {
-    const response = await client.query('UPDATE form SET title_form = $1, description_form = $2, random_order = $3, send_alert = $4, locked = $5 WHERE form_id = $6 RETURNING *', [
+    const response = await client.query('UPDATE form SET title_form = $1, description_form = $2, locked = $3 WHERE form_id = $4 RETURNING *', [
       title_form, 
       description_form,
-      random_order,
-      send_alert, 
       locked,
       form_id
     ]);

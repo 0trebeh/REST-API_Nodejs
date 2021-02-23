@@ -57,9 +57,7 @@ create table form (
 	menu_id integer NOT NULL,
 	title_form VARCHAR (100) NOT NULL,
 	description_form VARCHAR (800),
-  random_order boolean DEFAULT false,
-  send_alert boolean DEFAULT false,
-  locked boolean DEFAULT false,
+        locked boolean DEFAULT false,
 	created_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (menu_id)
         REFERENCES menu (menu_id)

@@ -179,7 +179,7 @@ const updateQuestion = async (req, res) => {
       required, 
       question_id 
     ]);
-    const response = await client.query('UUPDATE type_question SET selection = $1, text = $2, numeric = $3, checklist = $4, drop_down_list = $5 WHERE question_id = $6 RETURNING *', [
+    await client.query('UPDATE type_question SET selection = $1, text = $2, numeric = $3, checklist = $4, drop_down_list = $5 WHERE question_id = $6 RETURNING *', [
       selection, 
       text, 
       numeric, 

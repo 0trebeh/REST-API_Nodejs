@@ -82,10 +82,11 @@ create table type_question (
 );
 
 create table question (
-	question_id serial PRIMARY KEY,
+  question_id serial PRIMARY KEY,
   form_id integer NOT NULL,
   title_q VARCHAR (100) NOT NULL,
   description_q VARCHAR (800),
+  value varchar (800),
   response_size integer,
   required boolean DEFAULT false,
   FOREIGN KEY (form_id)
@@ -97,9 +98,14 @@ create table question (
 create table answer (
   answer_id serial PRIMARY KEY,
   question_id integer NOT NULL,
+  user_id integer NOT NULL,
   value varchar (1500),
   FOREIGN KEY (question_id)
       REFERENCES question (question_id)
       ON DELETE CASCADE
-      ON UPDATE CASCADE
+      ON UPDATE CASCADE,
+  FOREIGN KEY (user_id)
+        REFERENCES app_user (user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );

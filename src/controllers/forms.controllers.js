@@ -4,7 +4,7 @@ const { main } = require('../utils/mailer');
 const getMenus = async (req, res) => {
   const client = await pool.connect();
   try {
-    const response = await client.query('SELECT menu_id, title_menu FROM menu');
+    const response = await client.query('SELECT * FROM menu WHERE submenu IS NULL');
     res.status(200).json(response.rows);
   } finally {
     client.release(true);
@@ -30,6 +30,19 @@ const getQuestion = async (req, res) => {
   try {
     const response = await client.query('SELECT * FROM question INNER JOIN type_question on question.form_id = $1 AND question.question_id = type_question.question_id', [
       form_id
+    ]);
+    res.status(200).json(response.rows);
+  } finally {
+    client.release(true);
+  }
+};
+
+const getAnswer = async (req, res) => {
+  const client = await pool.connect();
+  const question_id = parseInt(req.params.id);
+  try {
+    const response = await client.query('SELECT * FROM answer WHERE question_id = $1', [
+      question_id
     ]);
     res.status(200).json(response.rows);
   } finally {
@@ -72,13 +85,14 @@ const createForm = async (req, res) => {
 
 const createQuestion = async (req, res) => {
   const client = await pool.connect();
-  const { form_id, title_q, description_q, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
+  const { form_id, title_q, description_q, value, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
   try {
     await client.query('BEGIN');
-    const response = await client.query('INSERT INTO question (form_id, title_q, description_q, response_size, required) VALUES ($1, $2, $3, $4, $5) RETURNING *', [
+    const response = await client.query('INSERT INTO question (form_id, title_q, description_q, value, response_size, required) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
       form_id, 
       title_q, 
-      description_q, 
+      description_q,
+      value, 
       response_size, 
       required
     ]);
@@ -96,6 +110,21 @@ const createQuestion = async (req, res) => {
   } catch (e) {
     await client.query('ROLLBACK')
     throw e
+  } finally {
+    client.release(true);
+  }
+};
+
+const createAnswer = async (req, res) => {
+  const client = await pool.connect();
+  const { question_id, user_id, value } = req.body;
+  try {
+    const response = await client.query('INSERT INTO answer (question_id, user_id, value) VALUES ($1, $2, $3) RETURNING *', [
+      question_id, 
+      user_id, 
+      value
+    ]);
+    res.status(200).json(response.rows);
   } finally {
     client.release(true);
   }
@@ -139,12 +168,13 @@ const updateForm = async (req, res) => {
 const updateQuestion = async (req, res) => {
   const client = await pool.connect();
   const question_id = parseInt(req.params.id);
-  const { title_q, description_q, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
+  const { title_q, description_q, value, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
   try {
     await client.query('BEGIN');
-    const response = await client.query('UPDATE question SET title_q = $1, description_q = $2, response_size = $3, required = $4 WHERE question_id = $5 RETURNING *', [
+    const response = await client.query('UPDATE question SET title_q = $1, description_q = $2, value = $3, response_size = $4, required = $5 WHERE question_id = $6 RETURNING *', [
       title_q, 
       description_q, 
+      value,
       response_size, 
       required, 
       question_id 
@@ -184,7 +214,7 @@ const deleteForm = async (req, res) => {
   const form_id = parseInt(req.params.id);
   try {
     await client.query('DELETE FROM form WHERE form_id = $1', [ form_id ]);
-    res.status(200).json(`Menu deleted Successfully`);
+    res.status(200).json(`Form deleted Successfully`);
 
   } finally {
     client.release(true);
@@ -196,7 +226,19 @@ const deleteQuestion = async (req, res) => {
   const question_id = parseInt(req.params.id);
   try {
     await client.query('DELETE FROM question WHERE question_id = $1', [ question_id ]);
-    res.status(200).json(`Menu deleted Successfully`);
+    res.status(200).json(`Question deleted Successfully`);
+
+  } finally {
+    client.release(true);
+  }
+};
+
+const deleteAnswer = async (req, res) => {
+  const client = await pool.connect();
+  const answer_id = parseInt(req.params.id);
+  try {
+    await client.query('DELETE FROM answer WHERE answer_id = $1', [ answer_id ]);
+    res.status(200).json(`answer deleted Successfully`);
 
   } finally {
     client.release(true);
@@ -207,13 +249,16 @@ module.exports = {
   getMenus,
   getSub,
   getQuestion,
+  getAnswer,
   createMenu,
   createForm,
   createQuestion,
+  createAnswer,
   updateMenu,
   updateForm,
   updateQuestion,
   deleteMenu,
   deleteForm,
   deleteQuestion,
+  deleteAnswer
 };

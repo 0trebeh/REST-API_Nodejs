@@ -11,9 +11,9 @@ const {
     updateMenu,
     updateForm,
     updateQuestion,
-    /*deleteMenu,
+    deleteMenu,
     deleteForm,
-    deleteQuestion,*/
+    deleteQuestion,
 } = require('../controllers/forms.controllers');
 
 router.get('/menu', getMenus);
@@ -26,10 +26,10 @@ router.post('/question', createQuestion);
 
 router.put('/menu/:id', updateMenu);
 router.put('/form/:id', updateForm);
-router.put('/form/:id', updateQuestion);
-/*
+router.put('/question/:id', updateQuestion);
+
 router.delete('/menu/:id', deleteMenu);
 router.delete('/form/:id', deleteForm);
-router.delete('/question/:id', deleteQuestion);*/
+router.delete('/question/:id', deleteQuestion);
 
 module.exports = router;

@@ -28,7 +28,7 @@ const getQuestion = async (req, res) => {
   const client = await pool.connect();
   const form_id = parseInt(req.params.id);
   try {
-    const response = await client.query('SELECT * FROM question INNER JOIN type_question on question.form_id = $1 AND question.tq_id = type_question.tq_id', [
+    const response = await client.query('SELECT * FROM question INNER JOIN type_question on question.form_id = $1 AND question.question_id = type_question.question_id', [
       form_id
     ]);
     res.status(200).json(response.rows);
@@ -72,25 +72,30 @@ const createForm = async (req, res) => {
 
 const createQuestion = async (req, res) => {
   const client = await pool.connect();
-  const { form_id, tq_id, title_q, description_q, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
+  const { form_id, title_q, description_q, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
   try {
-    const respons = await client.query('INSERT INTO type_question (selection, text, numeric, checklist, drop_down_list) VALUES ($1, $2, $3, $4, $5) RETURNING *', [
+    await client.query('BEGIN');
+    const response = await client.query('INSERT INTO question (form_id, title_q, description_q, response_size, required) VALUES ($1, $2, $3, $4, $5) RETURNING *', [
+      form_id, 
+      title_q, 
+      description_q, 
+      response_size, 
+      required
+    ]);
+    const question_id = response.rows.question_id;
+    await client.query('INSERT INTO type_question (question_id, selection, text, numeric, checklist, drop_down_list) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
+      question_id, 
       selection, 
       text, 
       numeric, 
       checklist, 
       drop_down_list
     ]);
-    const response = await client.query('INSERT INTO question (form_id, tq_id, title_q, description_q, response_size, required) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
-      form_id, 
-      tq_id, 
-      title_q, 
-      description_q, 
-      response_size, 
-      required
-    ]);
+    await client.query('COMMIT')
     res.status(200).json(response.rows);
-    res.status(200).json(respons.rows);
+  } catch (e) {
+    await client.query('ROLLBACK')
+    throw e
   } finally {
     client.release(true);
   }
@@ -99,12 +104,10 @@ const createQuestion = async (req, res) => {
 const updateMenu = async (req, res) => {
   const client = await pool.connect();
   const menu_id = parseInt(req.params.id);
-  const { title_menu, user_id, submenu } = req.body;
+  const { title_menu } = req.body;
   try {
-    const response = await client.query('UPDATE menu SET title_menu = $1, user_id = $2, submenu = $3 WHERE menu_id = $4 RETURNING *', [
+    const response = await client.query('UPDATE menu SET title_menu = $1 WHERE menu_id = $2 RETURNING *', [
       title_menu, 
-      user_id, 
-      submenu,
       menu_id
     ]);
     res.status(200).json(response.rows);
@@ -115,6 +118,7 @@ const updateMenu = async (req, res) => {
 
 
 const updateForm = async (req, res) => {
+  const client = await pool.connect();
   const form_id = parseInt(req.params.id);
   const { title_form, description_form, random_order, send_alert, locked } = req.body;
   try {
@@ -133,23 +137,71 @@ const updateForm = async (req, res) => {
 };
 
 const updateQuestion = async (req, res) => {
-  const id = parseInt(req.params.id);
-  const {  } = req.body;
+  const client = await pool.connect();
+  const question_id = parseInt(req.params.id);
+  const { title_q, description_q, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
   try {
-    const response = await client.query(' RETURNING *', [
-      
+    await client.query('BEGIN');
+    const response = await client.query('UPDATE question SET title_q = $1, description_q = $2, response_size = $3, required = $4 WHERE question_id = $5 RETURNING *', [
+      title_q, 
+      description_q, 
+      response_size, 
+      required, 
+      question_id 
     ]);
+    const response = await client.query('UUPDATE type_question SET selection = $1, text = $2, numeric = $3, checklist = $4, drop_down_list = $5 WHERE question_id = $6 RETURNING *', [
+      selection, 
+      text, 
+      numeric, 
+      checklist, 
+      drop_down_list,
+      question_id 
+    ]);
+    await client.query('COMMIT')
     res.status(200).json(response.rows);
+  } catch (e) {
+    await client.query('ROLLBACK')
+    throw e
   } finally {
     client.release(true);
   }
 };
 
-/*
-deleteMenu
-deleteForm
-deleteQuestion
-*/
+const deleteMenu = async (req, res) => {
+  const client = await pool.connect();
+  const menu_id = parseInt(req.params.id);
+  try {
+    await client.query('DELETE FROM menu WHERE menu_id = $1', [ menu_id ]);
+    res.status(200).json(`Menu deleted Successfully`);
+
+  } finally {
+    client.release(true);
+  }
+};
+
+const deleteForm = async (req, res) => {
+  const client = await pool.connect();
+  const form_id = parseInt(req.params.id);
+  try {
+    await client.query('DELETE FROM form WHERE form_id = $1', [ form_id ]);
+    res.status(200).json(`Menu deleted Successfully`);
+
+  } finally {
+    client.release(true);
+  }
+};
+
+const deleteQuestion = async (req, res) => {
+  const client = await pool.connect();
+  const question_id = parseInt(req.params.id);
+  try {
+    await client.query('DELETE FROM question WHERE question_id = $1', [ question_id ]);
+    res.status(200).json(`Menu deleted Successfully`);
+
+  } finally {
+    client.release(true);
+  }
+};
 
 module.exports = {
   getMenus,
@@ -161,7 +213,7 @@ module.exports = {
   updateMenu,
   updateForm,
   updateQuestion,
-  /*deleteMenu,
+  deleteMenu,
   deleteForm,
-  deleteQuestion,*/
+  deleteQuestion,
 };

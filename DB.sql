@@ -8,7 +8,6 @@ create table app_user (
 	password VARCHAR (120) NOT NULL,
   admin boolean DEFAULT false
 );
-/*insert into app_user (username, avatar, email, password, token_validation, admin) values ('clemente', NULL, 'clemente@gmail.com', 'cacahuate', NULL, NULL);*/
 
 create table menu (
 	menu_id serial PRIMARY KEY,
@@ -24,11 +23,8 @@ create table menu (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
-/**/
-/*1*/select * from menu, form where menu.menu_id = form.menu_id;
-/*2*/select * from menu inner join form on menu.menu_id = form.menu_id;
-/*3*/select * from menu as m inner join form as f on m.menu_id = f.menu_id;
-/* 1
+
+/* 
 WITH RECURSIVE ctemenu AS (
       SELECT menu_id, title_menu, submenu
       FROM menu
@@ -54,19 +50,7 @@ WITH RECURSIVE ctemenu AS (
 SELECT E1.EmployeeID
 FROM Employees E1 JOIN Employees E2 ON E1.Sueldo > E2.Sueldo
 WHERE E2.EmployeeID = 5
-/*
-WITH RECURSIVE ctename AS (
-      SELECT menu_id, title,
-             menu_id AS path
-      FROM menu
-      WHERE menu_id = 1
-   UNION ALL
-      SELECT menu.menu_id, menu.title,
-             ctename.path || ' -> ' || menu.menu_id
-      FROM menu
-         JOIN ctename ON menu.submenu = ctename.menu_id
-) SELECT * FROM ctename LIMIT 30;
-*/
+
 
 create table form (
 	form_id serial PRIMARY KEY,
@@ -89,13 +73,17 @@ create table type_question (
   text boolean DEFAULT false,
   numeric boolean DEFAULT false,
   checklist boolean DEFAULT false,
-  drop_down_list boolean DEFAULT false
+  drop_down_list boolean DEFAULT false,
+  question_id integer NOT NULL, 
+  FOREIGN KEY (question_id) 
+        REFERENCES question (question_id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
 );
 
 create table question (
 	question_id serial PRIMARY KEY,
   form_id integer NOT NULL,
-  tq_id integer NOT NULL,
   title_q VARCHAR (100) NOT NULL,
   description_q VARCHAR (800),
   response_size integer,
@@ -104,10 +92,6 @@ create table question (
         REFERENCES form (form_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-  FOREIGN KEY (tq_id)
-        REFERENCES type_question (tq_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 
 create table answer (

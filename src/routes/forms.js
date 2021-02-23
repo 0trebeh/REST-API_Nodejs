@@ -20,22 +20,22 @@ const {
 } = require('../controllers/forms.controllers');
 
 router.get('/menu', getMenus);
-router.get('/submenu/:menu_id', getSub);
-router.get('/question/:form_id', getQuestion);
-router.get('/answer/:question_id', getAnswer);
+router.get('/submenu/:id', getSub);
+router.get('/question/:id', getQuestion);
+router.get('/answer/:id', getAnswer);
 
 router.post('/menu', createMenu);
 router.post('/form', createForm);
 router.post('/question', createQuestion);
 router.post('/answer', createAnswer);
 
-router.put('/menu/:menu_id', updateMenu);
-router.put('/form/:form_id', updateForm);
-router.put('/question/:question_id', updateQuestion);
+router.put('/menu/:id', updateMenu);
+router.put('/form/:id', updateForm);
+router.put('/question/:id', updateQuestion);
 
-router.delete('/menu/:menu_id', deleteMenu);
-router.delete('/form/:form_id', deleteForm);
-router.delete('/question/:question_id', deleteQuestion);
-router.delete('/answer/:answer_id', deleteAnswer);
+router.delete('/menu/:id', deleteMenu);
+router.delete('/form/:id', deleteForm);
+router.delete('/question/:id', deleteQuestion);
+router.delete('/answer/:id', deleteAnswer);
 
 module.exports = router;

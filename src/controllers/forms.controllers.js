@@ -15,7 +15,7 @@ const getSub = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    const response = await client.query('WITH RECURSIVE ctemenu AS ( SELECT menu_id, title_menu, submenu FROM menu WHERE menu_id = $1 UNION ALL SELECT menu.menu_id, menu.title_menu, menu.submenu FROM menu JOIN ctemenu ON menu.submenu = ctemenu.menu_id) SELECT ctemenu.menu_id, ctemenu.title_menu, ctemenu.submenu, form.form_id, form.menu_id as form_menu, form.title_form, form.description_form, form.locked FROM ctemenu FULL OUTER JOIN form on ctemenu.menu_id = form.menu_id', [
+    const response = await client.query('WITH RECURSIVE ctemenu AS ( SELECT menu_id, title_menu, submenu FROM menu WHERE menu_id = $1 UNION ALL SELECT menu.menu_id, menu.title_menu, menu.submenu FROM menu JOIN ctemenu ON menu.submenu = ctemenu.menu_id) SELECT ctemenu.menu_id, ctemenu.title_menu, ctemenu.submenu, form.form_id, form.menu_id as form_menu, form.title_form, form.description_form, form.locked FROM ctemenu LEFT JOIN form on ctemenu.menu_id = form.menu_id', [
       id
     ]);
     res.status(200).json(response.rows);

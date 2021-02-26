@@ -15,9 +15,24 @@ const getSub = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    const response = await client.query('WITH RECURSIVE ctemenu AS ( SELECT menu_id, title_menu, submenu FROM menu WHERE menu_id = $1 UNION ALL SELECT menu.menu_id, menu.title_menu, menu.submenu FROM menu JOIN ctemenu ON menu.submenu = ctemenu.menu_id) SELECT ctemenu.menu_id, ctemenu.title_menu, ctemenu.submenu, form.form_id, form.menu_id as form_menu, form.title_form, form.description_form, form.locked FROM ctemenu LEFT JOIN form on ctemenu.menu_id = form.menu_id', [
+    const response = await client.query('WITH RECURSIVE ctemenu AS ( SELECT menu_id, title_menu, submenu FROM menu WHERE menu_id = $1 UNION ALL SELECT menu.menu_id, menu.title_menu, menu.submenu FROM menu JOIN ctemenu ON menu.submenu = ctemenu.menu_id) SELECT ctemenu.menu_id, ctemenu.title_menu, ctemenu.submenu, form.form_id, form.title_form FROM ctemenu LEFT JOIN form on ctemenu.menu_id = form.menu_id ORDER BY ctemenu.menu_id', [
       id
     ]);
+
+    const length = Object.keys(response).length;
+    const menuId = NULL;
+
+    for(i==0 ; i==length; i++){
+      if(response[i].menu_id == menuId){
+
+        response[i - 1].splice(2, 0, 'drum' );
+        response = response.splice(i, 1);
+        i--;
+      }
+      menuId = response[i].menu_id;
+    }
+
+
     res.status(200).json(response.rows);
   } finally {
     client.release(true);

@@ -1,9 +1,11 @@
 const client = require('../utils/dbconnection');
 const { mail } = require('../utils/mailer');
+const query = require('../utils/queries');
+
 
 const getUsers = async (req, res) => {
 
-  const response = await client.query('SELECT * FROM app_user ORDER BY user_id ASC');
+  const response = await client.query(query.getUsers);
   res.status(200).json(response.rows);
 
 };

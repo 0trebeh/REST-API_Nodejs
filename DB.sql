@@ -3,7 +3,7 @@ create database forms;
 create table app_user (
 	user_id serial PRIMARY KEY,
 	username VARCHAR (60) UNIQUE NOT NULL,
-	avatar VARCHAR (600),
+	avatar VARCHAR (100) DEFAULT '../../assets/img/1.png',
 	email VARCHAR (255) UNIQUE NOT NULL,
 	password VARCHAR (120) NOT NULL,
   admin boolean DEFAULT false

@@ -1,10 +1,9 @@
-const config = require("../config/config"); 
-
+require('dotenv').config();
 
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: config.DBURI,
+  connectionString: process.env.DBURI,
   max: 20,
   ssl: {
     rejectUnauthorized: false

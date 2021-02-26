@@ -1,22 +1,22 @@
 const nodemailer = require("nodemailer");
-const config = require("../config/config"); 
+require('dotenv').config();
 
 const mail = async (username, email) => {
 
   const transporter = nodemailer.createTransport({
-    host: config.hostMail,
-    port: config.portMail,
-    secure: config.secure,
+    host: process.env.HOSTMAIL,
+    port: process.env.PORTMAIL,
+    secure: process.env.SECURE,
     auth: {
-      user: config.user,
-      pass: config.pass
+      user: process.env.EMAIL,
+      pass: process.env.PASS
     },
   });
 
 
   // send mail with defined transport object
   await transporter.sendMail({
-    from: '"Your Forms" <'+ config.user +'>', 
+    from: '"Your Forms" <'+ process.env.EMAIL +'>', 
     to: email, 
     subject: "Hello "+ username +"!. Welcome to your forms! ✔",
     text: "Congratulations your registration in your forms was successful! \nstart creating your forms without limits!\n\nAutors: Clemente and Heberto"

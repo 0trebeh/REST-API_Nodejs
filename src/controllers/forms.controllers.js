@@ -19,20 +19,6 @@ const getSub = async (req, res) => {
       id
     ]);
 
-    const length = Object.keys(response).length;
-    const menuId = NULL;
-
-    for(i==0 ; i==length; i++){
-      if(response[i].menu_id == menuId){
-
-        response[i - 1].splice(2, 0, 'drum' );
-        response = response.splice(i, 1);
-        i--;
-      }
-      menuId = response[i].menu_id;
-    }
-
-
     res.status(200).json(response.rows);
   } finally {
     client.release(true);

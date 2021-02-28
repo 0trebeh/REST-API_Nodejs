@@ -84,7 +84,7 @@ const createForm = async (req, res) => {
 
 const createQuestion = async (req, res) => {
   const client = await pool.connect();
-  const { form_id, title_q, description_q, value, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
+  const { form_id, title_q, description_q, value, response_size, required, selection, text, numeric, checklist } = req.body;
   try {
     await client.query('BEGIN');
     const response = await client.query('INSERT INTO question (form_id, title_q, description_q, value, response_size, required) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
@@ -96,13 +96,12 @@ const createQuestion = async (req, res) => {
       required
     ]);
     const question_id = response.rows.question_id;
-    await client.query('INSERT INTO type_question (question_id, selection, text, numeric, checklist, drop_down_list) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
+    await client.query('INSERT INTO type_question (question_id, selection, text, numeric, checklist) VALUES ($1, $2, $3, $4, $5) RETURNING *', [
       question_id, 
       selection, 
       text, 
       numeric, 
-      checklist, 
-      drop_down_list
+      checklist
     ]);
     await client.query('COMMIT')
     res.status(200).json(response.rows);
@@ -165,7 +164,7 @@ const updateForm = async (req, res) => {
 const updateQuestion = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
-  const { title_q, description_q, value, response_size, required, selection, text, numeric, checklist, drop_down_list } = req.body;
+  const { title_q, description_q, value, response_size, required, selection, text, numeric, checklist } = req.body;
   try {
     await client.query('BEGIN');
     const response = await client.query('UPDATE question SET title_q = $1, description_q = $2, value = $3, response_size = $4, required = $5 WHERE question_id = $6 RETURNING *', [
@@ -176,12 +175,11 @@ const updateQuestion = async (req, res) => {
       required, 
       id 
     ]);
-    await client.query('UPDATE type_question SET selection = $1, text = $2, numeric = $3, checklist = $4, drop_down_list = $5 WHERE question_id = $6 RETURNING *', [
+    await client.query('UPDATE type_question SET selection = $1, text = $2, numeric = $3, checklist = $4 WHERE question_id = $5 RETURNING *', [
       selection, 
       text, 
       numeric, 
-      checklist, 
-      drop_down_list,
+      checklist,
       id 
     ]);
     await client.query('COMMIT')

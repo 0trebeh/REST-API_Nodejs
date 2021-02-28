@@ -71,7 +71,6 @@ create table type_question (
   text boolean DEFAULT false,
   numeric boolean DEFAULT false,
   checklist boolean DEFAULT false,
-  drop_down_list boolean DEFAULT false,
   question_id integer NOT NULL, 
   FOREIGN KEY (question_id) 
         REFERENCES question (question_id) 

@@ -1,11 +1,12 @@
 const pool = require('../utils/dbconnection'); 
-const { main } = require('../utils/mailer');
 
 const getMenus = async (req, res) => {
   const client = await pool.connect();
   try {
     const response = await client.query('SELECT menu_id, title_menu FROM menu WHERE submenu IS NULL');
     res.status(200).json(response.rows);
+  }catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -20,6 +21,8 @@ const getSub = async (req, res) => {
     ]);
 
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -33,6 +36,8 @@ const getQuestion = async (req, res) => {
       id
     ]);
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -46,6 +51,8 @@ const getAnswer = async (req, res) => {
       id
     ]);
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -61,6 +68,8 @@ const createMenu = async (req, res) => {
       submenu
     ]);
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -77,6 +86,8 @@ const createForm = async (req, res) => {
       locked
     ]);
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -117,12 +128,23 @@ const createAnswer = async (req, res) => {
   const client = await pool.connect();
   const { question_id, user_id, value } = req.body;
   try {
+
+
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index];
+      
+    }
+
+
+    
     const response = await client.query('INSERT INTO answer (question_id, user_id, value) VALUES ($1, $2, $3) RETURNING *', [
       question_id, 
       user_id, 
       value
     ]);
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -138,6 +160,8 @@ const updateMenu = async (req, res) => {
       id
     ]);
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -156,6 +180,8 @@ const updateForm = async (req, res) => {
       id
     ]);
     res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -199,6 +225,8 @@ const deleteMenu = async (req, res) => {
     await client.query('DELETE FROM menu WHERE menu_id = $1', [ id ]);
     res.status(200).json(`Menu deleted Successfully`);
 
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -211,6 +239,8 @@ const deleteForm = async (req, res) => {
     await client.query('DELETE FROM form WHERE form_id = $1', [ id ]);
     res.status(200).json(`Form deleted Successfully`);
 
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -223,6 +253,8 @@ const deleteQuestion = async (req, res) => {
     await client.query('DELETE FROM question WHERE question_id = $1', [ id ]);
     res.status(200).json(`Question deleted Successfully`);
 
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }
@@ -235,6 +267,8 @@ const deleteAnswer = async (req, res) => {
     await client.query('DELETE FROM answer WHERE answer_id = $1', [ id ]);
     res.status(200).json(`answer deleted Successfully`);
 
+  } catch{
+    res.status(505);
   } finally {
     client.release(true);
   }

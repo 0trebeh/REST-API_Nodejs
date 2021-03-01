@@ -36,10 +36,10 @@ const getLogin = async (req, res) => {
       username, 
       password
     ]);
-    if(response.rows.user_id){
+    if(response.rows[0].user_id){
       res.status(200).json(response.rows);
     }else{
-      res.status(404);
+      res.status(404).json('Login failed');
     }
   }catch{
     res.status(505);

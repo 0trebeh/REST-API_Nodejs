@@ -25,7 +25,7 @@ const getLogin = async (req, res) => {
     username, 
     password
   ]);
-  res.status(200).json(response.rows);
+  res.json(response.rows);
 
 };
 

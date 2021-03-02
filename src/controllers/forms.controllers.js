@@ -47,7 +47,7 @@ const getAnswer = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    const response = await client.query('SELECT * FROM answer WHERE question_id = $1', [
+    const response = await client.query('SELECT answer.value FROM answer INNER JOIN question ON answer.question_id = question.question_id INNER JOIN form ON form.form_id = $1', [
       id
     ]);
     res.status(200).json(response.rows);

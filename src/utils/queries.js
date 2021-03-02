@@ -18,12 +18,7 @@ module.exports = {
     createQuestion: 'INSERT INTO question (form_id, title_q, description_q, value, response_size, required) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
     createQuestion2: 'INSERT INTO type_question (question_id, selection, text, numeric, checklist) VALUES ($1, $2, $3, $4, $5) RETURNING *',
     createAnswer: 'INSERT INTO answer (question_id, user_id, value) VALUES ($1, $2, $3) RETURNING *',
-    updateMenu: 'UPDATE menu SET title_menu = $1 WHERE menu_id = $2 RETURNING *',
-    updateForm: 'UPDATE form SET title_form = $1, description_form = $2, locked = $3 WHERE form_id = $4 RETURNING *',
-    updateQuestion: 'UPDATE question SET title_q = $1, description_q = $2, value = $3, response_size = $4, required = $5 WHERE question_id = $6 RETURNING *',
-    updateQuestion2: 'UPDATE type_question SET selection = $1, text = $2, numeric = $3, checklist = $4 WHERE question_id = $5 RETURNING *',
     deleteMenu: 'DELETE FROM menu WHERE menu_id = $1',
     deleteForm: 'DELETE FROM form WHERE form_id = $1',
     deleteQuestion: 'DELETE FROM question WHERE question_id = $1',
-    deleteAnswer: 'DELETE FROM answer WHERE answer_id = $1',
 }

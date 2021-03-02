@@ -79,7 +79,7 @@ const createForm = async (req, res) => {
   const client = await pool.connect();
   const { menu_id, title_form, description_form, locked } = req.body;
   try {
-    const response = await client.query('INSERT INTO form (menu_id, title_form, description_form, locked) VALUES ($1, $2, $3, %4) RETURNING *', [
+    const response = await client.query('INSERT INTO form (menu_id, title_form, description_form, locked) VALUES ($1, $2, $3, $4) RETURNING *', [
       menu_id, 
       title_form, 
       description_form, 

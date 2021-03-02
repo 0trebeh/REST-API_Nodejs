@@ -6,6 +6,7 @@ const {
     getSub,
     getQuestion,
     getAnswer,
+    getAnswerUser,
     createMenu,
     createForm,
     createQuestion,
@@ -23,6 +24,7 @@ router.get('/menu', getMenus);
 router.get('/submenu/:id', getSub);
 router.get('/question/:id', getQuestion);
 router.get('/answer/:id', getAnswer);
+router.get('/answerUser/:id', getAnswerUser);
 
 router.post('/menu', createMenu);
 router.post('/form', createForm);

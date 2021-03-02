@@ -60,6 +60,21 @@ const getAnswer = async (req, res) => {
   }
 };
 
+const getAnswerUser = async (req, res) => {
+  const client = await pool.connect();
+  const id = parseInt(req.params.id);
+  try {
+    const response = await client.query(query.getAnswerUser, [
+      id
+    ]);
+    res.status(200).json(response.rows);
+  } catch{
+    res.status(505);
+  } finally {
+    client.release(true);
+  }
+};
+
 const createMenu = async (req, res) => {
   const client = await pool.connect();
   const { title_menu, user_id, submenu } = req.body;
@@ -281,6 +296,7 @@ module.exports = {
   getSub,
   getQuestion,
   getAnswer,
+  getAnswerUser,
   createMenu,
   createForm,
   createQuestion,

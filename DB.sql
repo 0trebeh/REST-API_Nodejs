@@ -6,7 +6,7 @@ create table app_user (
 	avatar VARCHAR (100) DEFAULT '../../assets/img/1.png',
 	email VARCHAR (255) UNIQUE NOT NULL,
 	password VARCHAR (120) NOT NULL,
-  admin boolean DEFAULT false
+        admin boolean DEFAULT false
 );
 
 create table menu (
@@ -24,38 +24,10 @@ create table menu (
         ON UPDATE CASCADE
 );
 
-/* 
-WITH RECURSIVE ctemenu AS (
-      SELECT menu_id, title_menu, submenu
-      FROM menu
-      WHERE menu_id = 1
-   UNION ALL
-      SELECT menu.menu_id, menu.title_menu, menu.submenu
-      FROM menu
-         JOIN ctemenu ON menu.submenu = ctemenu.menu_id
-) SELECT * FROM ctename LIMIT 30;
-*/
-/*
-WITH RECURSIVE ctemenu AS (
-        SELECT menu_id, title_menu, submenu
-        FROM menu
-        WHERE menu_id = 1
-    UNION ALL
-        SELECT menu.menu_id, menu.title_menu, menu.submenu
-        FROM menu
-          JOIN ctemenu ON menu.submenu = ctemenu.menu_id
-  ) SELECT ctemenu.menu_id, ctemenu.title_menu, ctemenu.submenu, form.form_id, form.menu_id, form.title_form, form.description_form, form.random_order, form.send_alert, form.locked FROM ctemenu FULL OUTER JOIN form on ctemenu.menu_id = form.menu_id;
-*/
-
-SELECT E1.EmployeeID
-FROM Employees E1 JOIN Employees E2 ON E1.Sueldo > E2.Sueldo
-WHERE E2.EmployeeID = 5
-
-
 create table form (
 	form_id serial PRIMARY KEY,
 	menu_id integer NOT NULL,
-	title_form VARCHAR (100) NOT NULL,
+	title_form VARCHAR (160) NOT NULL,
 	description_form VARCHAR (800),
         locked boolean DEFAULT false,
 	created_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -81,9 +53,9 @@ create table type_question (
 create table question (
   question_id serial PRIMARY KEY,
   form_id integer NOT NULL,
-  title_q VARCHAR (100) NOT NULL,
+  title_q VARCHAR (160) NOT NULL,
   description_q VARCHAR (800),
-  value varchar (800),
+  value varchar (1200),
   response_size integer,
   required boolean DEFAULT false,
   FOREIGN KEY (form_id)

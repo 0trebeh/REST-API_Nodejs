@@ -19,7 +19,7 @@ const getUserById = async (req, res) => {
   const client = await pool.connect();
   try{
     const id = parseInt(req.params.id);
-    const response = await client.query('SELECT * FROM app_user WHERE user_id = $1', [id]);
+    const response = await client.query(query.getUserById, [id]);
     res.status(200).json(response.rows);
   }catch{
     res.status(505);
@@ -32,7 +32,7 @@ const getLogin = async (req, res) => {
   const client = await pool.connect();
   try{
     const { username, password } = req.body;
-    const response = await client.query('SELECT * FROM app_user WHERE username = $1 AND password = $2', [
+    const response = await client.query(query.getLogin, [
       username, 
       password
     ]);
@@ -52,7 +52,7 @@ const createUser = async (req, res) => {
   const client = await pool.connect();
   try{
     const { username, email, password } = req.body;
-    const response = await client.query('INSERT INTO app_user (username, email, password) VALUES ($1, $2, $3) RETURNING *', [
+    const response = await client.query(query.createUser, [
       username, 
       email,
       password
@@ -75,7 +75,7 @@ const updateUser = async (req, res) => {
     const id = parseInt(req.params.id);
     const { username, email, password, avatar } = req.body;
 
-    const response = await client.query('UPDATE app_user SET username = $1, email = $2, password = $3, avatar = $4 WHERE user_id = $5 RETURNING *', [
+    const response = await client.query(query.updateUser, [
         username,
         email,
         password,
@@ -94,7 +94,7 @@ const deleteUser = async (req, res) => {
   const client = await pool.connect();
   try{
     const id = parseInt(req.params.id);
-    await client.query('DELETE FROM app_user where user_id = $1', [ id ]);
+    await client.query(query.deleteUser, [ id ]);
     res.status(200).json(`User ${id} deleted Successfully`);
   }catch{
     res.status(505);

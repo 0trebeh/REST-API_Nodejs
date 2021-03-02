@@ -1,9 +1,11 @@
 const pool = require('../utils/dbconnection'); 
+const query = require('../utils/queries');
+
 
 const getMenus = async (req, res) => {
   const client = await pool.connect();
   try {
-    const response = await client.query('SELECT menu_id, title_menu FROM menu WHERE submenu IS NULL');
+    const response = await client.query(query.getMenus);
     res.status(200).json(response.rows);
   }catch{
     res.status(505);
@@ -16,7 +18,7 @@ const getSub = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    const response = await client.query('WITH RECURSIVE ctemenu AS ( SELECT menu_id, title_menu, submenu FROM menu WHERE menu_id = $1 UNION ALL SELECT menu.menu_id, menu.title_menu, menu.submenu FROM menu JOIN ctemenu ON menu.submenu = ctemenu.menu_id) SELECT ctemenu.menu_id, ctemenu.title_menu, ctemenu.submenu, form.form_id, form.title_form FROM ctemenu LEFT JOIN form on ctemenu.menu_id = form.menu_id ORDER BY ctemenu.menu_id', [
+    const response = await client.query(query.getSub, [
       id
     ]);
 
@@ -32,7 +34,7 @@ const getQuestion = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    const response = await client.query('SELECT * FROM question INNER JOIN type_question on question.form_id = $1 AND question.question_id = type_question.question_id INNER JOIN form on form.form_id = $1', [
+    const response = await client.query(query.getQuestion, [
       id
     ]);
     res.status(200).json(response.rows);
@@ -47,7 +49,7 @@ const getAnswer = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    const response = await client.query('SELECT form.title_form, question.title_q, answer.value FROM answer INNER JOIN question ON answer.question_id = question.question_id INNER JOIN form ON form.form_id = $1', [
+    const response = await client.query(query.getAnswer, [
       id
     ]);
     res.status(200).json(response.rows);
@@ -62,7 +64,7 @@ const createMenu = async (req, res) => {
   const client = await pool.connect();
   const { title_menu, user_id, submenu } = req.body;
   try {
-    const response = await client.query('INSERT INTO menu (title_menu, user_id, submenu) VALUES ($1, $2, $3) RETURNING *', [
+    const response = await client.query(query.createMenu, [
       title_menu, 
       user_id, 
       submenu
@@ -79,7 +81,7 @@ const createForm = async (req, res) => {
   const client = await pool.connect();
   const { menu_id, title_form, description_form, locked } = req.body;
   try {
-    const response = await client.query('INSERT INTO form (menu_id, title_form, description_form, locked) VALUES ($1, $2, $3, $4) RETURNING *', [
+    const response = await client.query(query.createForm, [
       menu_id, 
       title_form, 
       description_form, 
@@ -98,7 +100,7 @@ const createQuestion = async (req, res) => {
   const { form_id, title_q, description_q, value, response_size, required, selection, text, numeric, checklist } = req.body;
   try {
     await client.query('BEGIN');
-    const response = await client.query('INSERT INTO question (form_id, title_q, description_q, value, response_size, required) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
+    const response = await client.query(query.createQuestion, [
       form_id, 
       title_q, 
       description_q,
@@ -107,7 +109,7 @@ const createQuestion = async (req, res) => {
       required
     ]);
     const question_id = response.rows.question_id;
-    await client.query('INSERT INTO type_question (question_id, selection, text, numeric, checklist) VALUES ($1, $2, $3, $4, $5) RETURNING *', [
+    await client.query(query.createQuestion2, [
       question_id, 
       selection, 
       text, 
@@ -137,7 +139,7 @@ const createAnswer = async (req, res) => {
 
 
     
-    const response = await client.query('INSERT INTO answer (question_id, user_id, value) VALUES ($1, $2, $3) RETURNING *', [
+    const response = await client.query(query.createAnswer, [
       question_id, 
       user_id, 
       value
@@ -155,7 +157,7 @@ const updateMenu = async (req, res) => {
   const id = parseInt(req.params.id);
   const { title_menu } = req.body;
   try {
-    const response = await client.query('UPDATE menu SET title_menu = $1 WHERE menu_id = $2 RETURNING *', [
+    const response = await client.query(query.updateMenu, [
       title_menu, 
       id
     ]);
@@ -173,7 +175,7 @@ const updateForm = async (req, res) => {
   const id = parseInt(req.params.id);
   const { title_form, description_form, locked } = req.body;
   try {
-    const response = await client.query('UPDATE form SET title_form = $1, description_form = $2, locked = $3 WHERE form_id = $4 RETURNING *', [
+    const response = await client.query(query.updateForm, [
       title_form, 
       description_form,
       locked,
@@ -193,7 +195,7 @@ const updateQuestion = async (req, res) => {
   const { title_q, description_q, value, response_size, required, selection, text, numeric, checklist } = req.body;
   try {
     await client.query('BEGIN');
-    const response = await client.query('UPDATE question SET title_q = $1, description_q = $2, value = $3, response_size = $4, required = $5 WHERE question_id = $6 RETURNING *', [
+    const response = await client.query(query.updateQuestion, [
       title_q, 
       description_q, 
       value,
@@ -201,7 +203,7 @@ const updateQuestion = async (req, res) => {
       required, 
       id 
     ]);
-    await client.query('UPDATE type_question SET selection = $1, text = $2, numeric = $3, checklist = $4 WHERE question_id = $5 RETURNING *', [
+    await client.query(query.updateQuestion2, [
       selection, 
       text, 
       numeric, 
@@ -222,7 +224,7 @@ const deleteMenu = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    await client.query('DELETE FROM menu WHERE menu_id = $1', [ id ]);
+    await client.query(query.deleteMenu, [ id ]);
     res.status(200).json(`Menu deleted Successfully`);
 
   } catch{
@@ -236,7 +238,7 @@ const deleteForm = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    await client.query('DELETE FROM form WHERE form_id = $1', [ id ]);
+    await client.query(query.deleteForm, [ id ]);
     res.status(200).json(`Form deleted Successfully`);
 
   } catch{
@@ -250,7 +252,7 @@ const deleteQuestion = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    await client.query('DELETE FROM question WHERE question_id = $1', [ id ]);
+    await client.query(query.deleteQuestion, [ id ]);
     res.status(200).json(`Question deleted Successfully`);
 
   } catch{
@@ -264,7 +266,7 @@ const deleteAnswer = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
   try {
-    await client.query('DELETE FROM answer WHERE answer_id = $1', [ id ]);
+    await client.query(query.deleteAnswer, [ id ]);
     res.status(200).json(`answer deleted Successfully`);
 
   } catch{

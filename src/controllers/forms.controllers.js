@@ -172,74 +172,6 @@ const createAnswer = async (req, res) => {
   }
 };
 
-const updateMenu = async (req, res) => {
-  const client = await pool.connect();
-  const id = parseInt(req.params.id);
-  const { title_menu } = req.body;
-  try {
-    const response = await client.query(query.updateMenu, [
-      title_menu, 
-      id
-    ]);
-    res.status(200).json(response.rows);
-  } catch{
-    res.status(505);
-  } finally {
-    client.release(true);
-  }
-};
-
-
-const updateForm = async (req, res) => {
-  const client = await pool.connect();
-  const id = parseInt(req.params.id);
-  const { title_form, description_form, locked } = req.body;
-  try {
-    const response = await client.query(query.updateForm, [
-      title_form, 
-      description_form,
-      locked,
-      id
-    ]);
-    res.status(200).json(response.rows);
-  } catch{
-    res.status(505);
-  } finally {
-    client.release(true);
-  }
-};
-
-const updateQuestion = async (req, res) => {
-  const client = await pool.connect();
-  const id = parseInt(req.params.id);
-  const { title_q, description_q, value, response_size, required, selection, text, numeric, checklist } = req.body;
-  try {
-    await client.query('BEGIN');
-    const response = await client.query(query.updateQuestion, [
-      title_q, 
-      description_q, 
-      value,
-      response_size, 
-      required, 
-      id 
-    ]);
-    await client.query(query.updateQuestion2, [
-      selection, 
-      text, 
-      numeric, 
-      checklist,
-      id 
-    ]);
-    await client.query('COMMIT')
-    res.status(200).json(response.rows);
-  } catch (e) {
-    await client.query('ROLLBACK')
-    throw e
-  } finally {
-    client.release(true);
-  }
-};
-
 const deleteMenu = async (req, res) => {
   const client = await pool.connect();
   const id = parseInt(req.params.id);
@@ -282,20 +214,6 @@ const deleteQuestion = async (req, res) => {
   }
 };
 
-const deleteAnswer = async (req, res) => {
-  const client = await pool.connect();
-  const id = parseInt(req.params.id);
-  try {
-    await client.query(query.deleteAnswer, [ id ]);
-    res.status(200).json(`answer deleted Successfully`);
-
-  } catch{
-    res.status(505);
-  } finally {
-    client.release(true);
-  }
-};
-
 module.exports = {
   getMenus,
   getSub,
@@ -306,11 +224,7 @@ module.exports = {
   createForm,
   createQuestion,
   createAnswer,
-  updateMenu,
-  updateForm,
-  updateQuestion,
   deleteMenu,
   deleteForm,
-  deleteQuestion,
-  deleteAnswer
+  deleteQuestion
 };

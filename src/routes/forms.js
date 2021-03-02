@@ -10,14 +10,10 @@ const {
     createMenu,
     createForm,
     createQuestion,
-    updateMenu,
-    updateForm,
-    updateQuestion,
     createAnswer,
     deleteMenu,
     deleteForm,
     deleteQuestion,
-    deleteAnswer,
 } = require('../controllers/forms.controllers');
 
 router.get('/menu', getMenus);
@@ -31,13 +27,8 @@ router.post('/form', createForm);
 router.post('/question', createQuestion);
 router.post('/answer', createAnswer);
 
-router.put('/menu/:id', updateMenu);
-router.put('/form/:id', updateForm);
-router.put('/question/:id', updateQuestion);
-
 router.delete('/menu/:id', deleteMenu);
 router.delete('/form/:id', deleteForm);
 router.delete('/question/:id', deleteQuestion);
-router.delete('/answer/:id', deleteAnswer);
 
 module.exports = router;

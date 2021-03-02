@@ -116,7 +116,7 @@ const createQuestion = async (req, res) => {
   let question_id = 0;
   try {
     await client.query('BEGIN');
-    const response = await client.query('INSERT INTO question (form_id, title_q, description_q, value, response_size, required) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
+    const response = await client.query(query.createQuestion, [
       form_id, 
       title_q, 
       description_q,

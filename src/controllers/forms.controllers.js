@@ -113,9 +113,10 @@ const createForm = async (req, res) => {
 const createQuestion = async (req, res) => {
   const client = await pool.connect();
   const { form_id, title_q, description_q, value, response_size, required, selection, text, numeric, checklist } = req.body;
+  let question_id = 0;
   try {
     await client.query('BEGIN');
-    const response = await client.query(query.createQuestion, [
+    const response = await client.query('INSERT INTO question (form_id, title_q, description_q, value, response_size, required) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [
       form_id, 
       title_q, 
       description_q,
@@ -123,7 +124,10 @@ const createQuestion = async (req, res) => {
       response_size, 
       required
     ]);
-    const question_id = response.rows.question_id;
+    
+    question_id = response.rows[0].question_id;
+    res.status(200).json(response.rows);
+
     await client.query(query.createQuestion2, [
       question_id, 
       selection, 
@@ -131,8 +135,9 @@ const createQuestion = async (req, res) => {
       numeric, 
       checklist
     ]);
+
     await client.query('COMMIT')
-    res.status(200).json(response.rows);
+
   } catch (e) {
     await client.query('ROLLBACK')
     throw e

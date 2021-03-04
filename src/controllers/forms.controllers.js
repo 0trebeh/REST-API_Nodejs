@@ -163,7 +163,7 @@ const createAnswer = async (req, res) => {
     }
     
     await client.query('COMMIT')
-    res.status(200);
+    res.status(200).json('Hecho!');;
   } catch{
     await client.query('ROLLBACK')
     throw e

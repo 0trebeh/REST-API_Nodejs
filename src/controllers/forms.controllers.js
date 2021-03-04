@@ -126,9 +126,8 @@ const createQuestion = async (req, res) => {
     ]);
     
     question_id = response.rows[0].question_id;
-    res.status(200).json(response.rows);
-
-    await client.query(query.createQuestion2, [
+    
+    const respons = await client.query(query.createQuestion2, [
       question_id, 
       selection, 
       text, 
@@ -136,6 +135,9 @@ const createQuestion = async (req, res) => {
       checklist
     ]);
 
+    let obj_unidos = Object.assign(response.rows, respons.rows)
+
+    res.status(200).json(obj_unidos);
     await client.query('COMMIT')
 
   } catch (e) {

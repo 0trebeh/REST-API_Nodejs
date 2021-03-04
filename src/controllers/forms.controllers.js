@@ -135,9 +135,9 @@ const createQuestion = async (req, res) => {
       checklist
     ]);
 
-    let obj_unidos = Object.assign(response.rows, respons.rows)
+    let obj_unidos = Object.assign(response.rows[0], respons.rows[0])
 
-    res.status(200).json(obj_unidos);
+    res.status(200).json([obj_unidos]);
     await client.query('COMMIT')
 
   } catch (e) {

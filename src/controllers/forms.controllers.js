@@ -148,25 +148,23 @@ const createQuestion = async (req, res) => {
 
 const createAnswer = async (req, res) => {
   const client = await pool.connect();
-  const { question_id, user_id, value } = req.body;
   try {
+    await client.query('BEGIN');
 
-
-    for (let index = 0; index < array.length; index++) {
-      const element = array[index];
-      
+    for (let i = 0; i < req.body.length; i++) {
+     let { question_id, user_id, value } = req.body[i];
+      await client.query(query.createAnswer, [
+        question_id, 
+        user_id, 
+        value
+      ]);
     }
-
-
     
-    const response = await client.query(query.createAnswer, [
-      question_id, 
-      user_id, 
-      value
-    ]);
-    res.status(200).json(response.rows);
+    await client.query('COMMIT')
+    res.status(200);
   } catch{
-    res.status(505);
+    await client.query('ROLLBACK')
+    throw e
   } finally {
     client.release(true);
   }
